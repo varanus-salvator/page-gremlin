@@ -1,0 +1,18 @@
+[
+  {
+    "id": "parool-paywall",
+    "name": "Parool — paywall verwijderen",
+    "domain": "parool.nl",
+    "description": "Verwijdert de DPG Media paywall overlay en maakt artikeltekst zichtbaar",
+    "js": "document.querySelectorAll('[data-temptation-position]').forEach(e => e.remove()); document.querySelectorAll('.tm-ui, ._vis_hide_layer, [id^=\"_vis_opt\"]').forEach(e => e.remove());",
+    "css": "body { overflow: auto !important; } .paywall, .temptation { display: none !important; }"
+  },
+  {
+    "id": "volkskrant-paywall",
+    "name": "Volkskrant — paywall verwijderen",
+    "domain": "volkskrant.nl",
+    "description": "Verwijdert de DPG Media paywall overlay",
+    "js": "document.querySelectorAll('[data-temptation-position]').forEach(e => e.remove()); document.querySelectorAll('.tm-ui, ._vis_hide_layer, [id^=\"_vis_opt\"]').forEach(e => e.remove());",
+    "css": "body { overflow: auto !important; } .paywall, .temptation { display: none !important; }"
+  }
+]

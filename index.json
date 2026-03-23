@@ -30,5 +30,21 @@
     "description": "Verbergt de DPG Media paywall overlay (zonder DOM-verwijdering) en toont artikeltekst",
     "js": "",
     "css": "[data-temptation-position], .marketing-banner, .tm-ui, ._vis_hide_layer, [id^=\"_vis_opt\"], .tm, .tm--inline { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; pointer-events: none !important; } .paywall { display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; overflow: visible !important; max-height: none !important; } body { overflow: auto !important; }"
+  },
+  {
+    "id": "telegraaf-archive",
+    "name": "Telegraaf — archive.ph redirect",
+    "domain": "telegraaf.nl",
+    "description": "Content zit niet in de HTML. Redirect automatisch naar archive.ph versie van het artikel.",
+    "js": "tweaker.archive();",
+    "css": ""
+  },
+  {
+    "id": "nrc-archive",
+    "name": "NRC — archive.ph redirect",
+    "domain": "nrc.nl",
+    "description": "Redirect naar archive.ph versie van het artikel",
+    "js": "tweaker.archive();",
+    "css": ""
   }
 ]

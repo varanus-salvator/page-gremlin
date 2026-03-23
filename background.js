@@ -98,9 +98,14 @@ window.tweaker = {
     container.insertBefore(div, container.firstChild);
   },
 
+  // Open current page on archive.ph
+  archive() {
+    window.location.href = 'https://archive.ph/newest/' + encodeURI(window.location.href);
+  },
+
   // Log to console with prefix
   log(...args) {
-    console.log('[Page Tweaker]', ...args);
+    console.log('[Page Gremlin]', ...args);
   },
 
   // Render a clean reader view from JSON-LD data
@@ -248,7 +253,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
               if (info) { info.remove(); return; }
               const panel = document.createElement('div');
               panel.id = 'tweaker-info';
-              panel.textContent = names;
+              panel.innerHTML = '<div style="margin-bottom:6px;font-weight:bold;color:#2d8a4e">Page Gremlin</div>'
+                + '<div style="margin-bottom:8px">' + names + '</div>'
+                + '<a href="https://archive.ph/newest/' + encodeURI(location.href)
+                + '" style="color:#2d8a4e;text-decoration:underline;font-size:11px">archive.ph versie</a>';
               badge.appendChild(panel);
             });
             document.body.appendChild(badge);

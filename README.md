@@ -1,10 +1,18 @@
 # Page Tweaker Snippets
 
-Community-maintained snippet library for the [Page Tweaker](https://github.com/varanus-salvator/page-tweaker) browser extension. Add custom JavaScript and CSS tweaks for any website.
+Browser extension to inject custom JavaScript and CSS per domain. Includes a community-maintained snippet library.
+
+## Install
+
+1. Clone or download this repo
+2. **Firefox**: `about:debugging#/runtime/this-firefox` → Load Temporary Add-on → select `manifest.json`
+3. **Chrome**: `chrome://extensions` → Developer mode → Load unpacked → select the repo folder
 
 ## How it works
 
-The Page Tweaker extension fetches `index.json` from this repo. Users can browse, search, and install snippets directly from the extension popup.
+- Add tweaks per domain via the popup (JS, CSS, or both)
+- Browse and install community snippets from the built-in snippet library
+- Snippets are fetched from `index.json` in this repo
 
 ## `tweaker` API
 

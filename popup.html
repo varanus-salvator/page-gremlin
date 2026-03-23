@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 420px; font: 13px/1.4 system-ui, sans-serif; padding: 12px; background: #1a1a2e; color: #e0e0e0; }
+  h1 { font-size: 15px; margin-bottom: 10px; color: #fff; display: flex; align-items: center; gap: 8px; }
+  h1 svg { width: 18px; height: 18px; }
+
+  .tweak { background: #16213e; border: 1px solid #0f3460; border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+  .tweak.disabled { opacity: 0.5; }
+  .tweak-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .tweak-header input[type="text"] { flex: 1; }
+  .tweak-header label { font-size: 11px; white-space: nowrap; cursor: pointer; }
+
+  input[type="text"], textarea {
+    background: #0a0a1a; border: 1px solid #0f3460; color: #e0e0e0;
+    border-radius: 4px; padding: 5px 8px; font: 12px monospace; width: 100%;
+  }
+  textarea { min-height: 60px; resize: vertical; margin-top: 4px; }
+  input:focus, textarea:focus { outline: none; border-color: #e94560; }
+
+  .label { font-size: 11px; color: #888; margin-top: 6px; }
+  .actions { display: flex; gap: 6px; margin-top: 8px; }
+  button {
+    background: #e94560; color: #fff; border: none; border-radius: 4px;
+    padding: 5px 12px; cursor: pointer; font-size: 12px;
+  }
+  button:hover { background: #c73652; }
+  button.secondary { background: #0f3460; }
+  button.secondary:hover { background: #1a4a7a; }
+  button.danger { background: #533; }
+  button.danger:hover { background: #744; }
+
+  #add, #browse { width: 100%; margin-top: 4px; }
+  .empty { color: #666; text-align: center; padding: 20px 0; font-style: italic; }
+
+  /* Snippet browser */
+  #snippet-panel { display: none; }
+  #snippet-panel.open { display: block; }
+  .snippet-search { margin: 8px 0; }
+  .snippet { background: #16213e; border: 1px solid #0f3460; border-radius: 6px; padding: 10px; margin-bottom: 6px; }
+  .snippet-name { font-weight: bold; color: #fff; font-size: 13px; }
+  .snippet-domain { font-size: 11px; color: #e94560; }
+  .snippet-desc { font-size: 11px; color: #999; margin: 4px 0; }
+  .snippet button { font-size: 11px; padding: 3px 10px; }
+  .repo-input { display: flex; gap: 6px; margin-bottom: 8px; }
+  .repo-input input { flex: 1; font: 12px monospace; }
+  .repo-input button { white-space: nowrap; }
+  .back-link { font-size: 12px; color: #e94560; cursor: pointer; border: none; background: none; margin-bottom: 8px; }
+  .back-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <h1>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+    </svg>
+    Page Tweaker
+  </h1>
+  <div id="main-panel">
+    <div id="list"></div>
+    <button id="add" class="secondary">+ Nieuw domein</button>
+    <button id="browse" class="secondary" style="margin-top:4px">&#128269; Snippet bibliotheek</button>
+  </div>
+
+  <div id="snippet-panel">
+    <button class="back-link" id="back">&larr; Terug naar tweaks</button>
+    <h1>Snippet Bibliotheek</h1>
+    <div class="repo-input">
+      <input type="text" id="repo-url" placeholder="user/repo (GitHub)">
+      <button id="fetch-repo" class="secondary">Ophalen</button>
+    </div>
+    <input type="text" class="snippet-search" id="snippet-search" placeholder="Zoek op domein of naam...">
+    <div id="snippet-list"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -3,32 +3,32 @@
     "id": "parool-paywall",
     "name": "Parool — paywall verwijderen",
     "domain": "parool.nl",
-    "description": "Verwijdert de DPG Media paywall overlay en maakt artikeltekst zichtbaar. JSON-LD bevat alleen de intro, dus reader view werkt hier niet.",
-    "js": "tweaker.remove('[data-temptation-position]', '.tm-ui', '._vis_hide_layer', '[id^=\"_vis_opt\"]'); tweaker.reveal('[id=\"article-content\"]');",
-    "css": "body { overflow: auto !important; } .paywall, .temptation { display: none !important; }"
+    "description": "Verwijdert de DPG Media paywall overlay en maakt artikeltekst zichtbaar",
+    "js": "tweaker.remove('[data-temptation-position]', '.tm-ui', '._vis_hide_layer', '[id^=\"_vis_opt\"]', '.marketing-banner'); tweaker.reveal('.paywall');",
+    "css": ".paywall { display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; overflow: visible !important; max-height: none !important; } body { overflow: auto !important; }"
   },
   {
     "id": "volkskrant-paywall",
     "name": "Volkskrant — paywall verwijderen",
     "domain": "volkskrant.nl",
     "description": "Verwijdert de DPG Media paywall overlay en maakt artikeltekst zichtbaar",
-    "js": "tweaker.remove('[data-temptation-position]', '.tm-ui', '._vis_hide_layer', '[id^=\"_vis_opt\"]'); tweaker.reveal('[id=\"article-content\"]');",
-    "css": "body { overflow: auto !important; } .paywall, .temptation { display: none !important; }"
+    "js": "tweaker.remove('[data-temptation-position]', '.tm-ui', '._vis_hide_layer', '[id^=\"_vis_opt\"]', '.marketing-banner'); tweaker.reveal('.paywall');",
+    "css": ".paywall { display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; overflow: visible !important; max-height: none !important; } body { overflow: auto !important; }"
   },
   {
     "id": "trouw-paywall",
     "name": "Trouw — paywall verwijderen",
     "domain": "trouw.nl",
     "description": "Verwijdert de DPG Media paywall overlay en maakt artikeltekst zichtbaar",
-    "js": "tweaker.remove('[data-temptation-position]', '.tm-ui', '._vis_hide_layer', '[id^=\"_vis_opt\"]'); tweaker.reveal('[id=\"article-content\"]');",
-    "css": "body { overflow: auto !important; } .paywall, .temptation { display: none !important; }"
+    "js": "tweaker.remove('[data-temptation-position]', '.tm-ui', '._vis_hide_layer', '[id^=\"_vis_opt\"]', '.marketing-banner'); tweaker.reveal('.paywall');",
+    "css": ".paywall { display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; overflow: visible !important; max-height: none !important; } body { overflow: auto !important; }"
   },
   {
     "id": "ad-paywall",
     "name": "AD — paywall verwijderen",
     "domain": "ad.nl",
     "description": "Verwijdert de DPG Media paywall overlay en maakt artikeltekst zichtbaar",
-    "js": "tweaker.remove('[data-temptation-position]', '.tm-ui', '._vis_hide_layer', '[id^=\"_vis_opt\"]'); tweaker.reveal('[id=\"article-content\"]');",
-    "css": "body { overflow: auto !important; } .paywall, .temptation { display: none !important; }"
+    "js": "tweaker.remove('[data-temptation-position]', '.tm-ui', '._vis_hide_layer', '[id^=\"_vis_opt\"]', '.marketing-banner'); tweaker.reveal('.paywall');",
+    "css": ".paywall { display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; overflow: visible !important; max-height: none !important; } body { overflow: auto !important; }"
   }
 ]

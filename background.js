@@ -1,3 +1,21 @@
+const BADGE_CSS = `
+#tweaker-badge {
+  position: fixed; bottom: 16px; right: 16px; z-index: 2147483647;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #1a1a2e; border: 2px solid #e94560; color: #e94560;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  opacity: 0.7; transition: opacity 0.2s;
+}
+#tweaker-badge:hover { opacity: 1; }
+#tweaker-info {
+  position: absolute; bottom: 40px; right: 0;
+  background: #1a1a2e; border: 1px solid #0f3460; color: #e0e0e0;
+  border-radius: 6px; padding: 8px 12px; font: 12px system-ui, sans-serif;
+  white-space: nowrap; box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+`;
+
 const READER_CSS = `
 .tweaker-reader {
   max-width: 680px; margin: 0 auto; padding: 40px 20px;
@@ -167,16 +185,24 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
           }).catch(() => {});
         }
       }
+      // Inject badge CSS early so it's ready
+      if (matching.length) {
+        chrome.scripting.insertCSS({
+          target: { tabId },
+          css: BADGE_CSS
+        }).catch(() => {});
+      }
     });
   }
 
   if (changeInfo.status === 'complete') {
-    // JS after page load — helpers + user scripts
     chrome.storage.local.get({ tweaks: [] }, ({ tweaks }) => {
       const matching = tweaks.filter(t => t.enabled && matchDomain(tab.url, t.domain));
-      const hasJS = matching.some(t => t.js);
-      if (!hasJS) return;
+      if (!matching.length) return;
 
+      const names = matching.map(t => t.name || t.domain).join(', ');
+
+      // Inject helpers
       chrome.scripting.executeScript({
         target: { tabId },
         func: (helpers, css) => {
@@ -191,6 +217,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         args: [HELPERS, READER_CSS],
         world: 'MAIN'
       }).then(() => {
+        // Run user JS
         for (const tweak of matching) {
           if (tweak.js) {
             chrome.scripting.executeScript({
@@ -206,6 +233,29 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             }).catch(() => {});
           }
         }
+
+        // Show badge
+        chrome.scripting.executeScript({
+          target: { tabId },
+          func: (names) => {
+            if (document.getElementById('tweaker-badge')) return;
+            const badge = document.createElement('div');
+            badge.id = 'tweaker-badge';
+            badge.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>';
+            badge.title = 'Page Tweaker actief:\\n' + names;
+            badge.addEventListener('click', () => {
+              const info = document.getElementById('tweaker-info');
+              if (info) { info.remove(); return; }
+              const panel = document.createElement('div');
+              panel.id = 'tweaker-info';
+              panel.textContent = names;
+              badge.appendChild(panel);
+            });
+            document.body.appendChild(badge);
+          },
+          args: [names],
+          world: 'MAIN'
+        }).catch(() => {});
       }).catch(() => {});
     });
   }

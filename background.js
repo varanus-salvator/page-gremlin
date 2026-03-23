@@ -1,16 +1,16 @@
 const BADGE_CSS = `
 #tweaker-badge {
   position: fixed; bottom: 16px; right: 16px; z-index: 2147483647;
-  width: 32px; height: 32px; border-radius: 50%;
-  background: #0d1a0d; border: 2px solid #2d8a4e; color: #4ade80;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #fff; border: 2px solid #2d8a4e; color: #4ade80;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   opacity: 0.7; transition: opacity 0.2s;
 }
-#tweaker-badge:hover { opacity: 1; }
+#tweaker-badge:hover { opacity: 1; transform: scale(1.1); }
 #tweaker-info {
-  position: absolute; bottom: 40px; right: 0;
-  background: #0d1a0d; border: 1px solid #1a6b35; color: #c0d8c0;
+  position: absolute; bottom: 52px; right: 0;
+  background: #fff; border: 1px solid #2d8a4e; color: #1a3a1a;
   border-radius: 6px; padding: 8px 12px; font: 12px system-ui, sans-serif;
   white-space: nowrap; box-shadow: 0 2px 12px rgba(0,0,0,0.4);
 }
@@ -241,7 +241,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             if (document.getElementById('tweaker-badge')) return;
             const badge = document.createElement('div');
             badge.id = 'tweaker-badge';
-            badge.innerHTML = '<svg viewBox="0 0 48 48" width="18" height="18"><path d="M8 18 L14 8 L18 16" fill="#2d8a4e"/><path d="M40 18 L34 8 L30 16" fill="#2d8a4e"/><ellipse cx="24" cy="26" rx="13" ry="12" fill="#2d8a4e"/><ellipse cx="18" cy="23" rx="3.5" ry="4" fill="#ffffcc"/><ellipse cx="30" cy="23" rx="3.5" ry="4" fill="#ffffcc"/><circle cx="19" cy="23" r="2" fill="#111"/><circle cx="31" cy="23" r="2" fill="#111"/><circle cx="19.7" cy="22" r="0.8" fill="#fff"/><circle cx="31.7" cy="22" r="0.8" fill="#fff"/><path d="M16 31 Q20 37 24 35 Q28 37 32 31" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round"/><rect x="19" y="31" width="2.5" height="3" rx="0.5" fill="#fff"/><rect x="26.5" y="31" width="2.5" height="3" rx="0.5" fill="#fff"/></svg>';
+            badge.innerHTML = '<svg viewBox="0 0 48 48" width="30" height="30"><path d="M8 18 L14 8 L18 16" fill="#2d8a4e"/><path d="M40 18 L34 8 L30 16" fill="#2d8a4e"/><ellipse cx="24" cy="26" rx="13" ry="12" fill="#2d8a4e"/><ellipse cx="18" cy="23" rx="3.5" ry="4" fill="#ffffcc"/><ellipse cx="30" cy="23" rx="3.5" ry="4" fill="#ffffcc"/><circle cx="19" cy="23" r="2" fill="#111"/><circle cx="31" cy="23" r="2" fill="#111"/><circle cx="19.7" cy="22" r="0.8" fill="#fff"/><circle cx="31.7" cy="22" r="0.8" fill="#fff"/><path d="M16 31 Q20 37 24 35 Q28 37 32 31" fill="none" stroke="#111" stroke-width="1.8" stroke-linecap="round"/><rect x="19" y="31" width="2.5" height="3" rx="0.5" fill="#fff"/><rect x="26.5" y="31" width="2.5" height="3" rx="0.5" fill="#fff"/></svg>';
             badge.title = 'Page Gremlin actief:\\n' + names;
             badge.addEventListener('click', () => {
               const info = document.getElementById('tweaker-info');

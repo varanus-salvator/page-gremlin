@@ -35,9 +35,9 @@
     "id": "nytimes-nags",
     "name": "NYTimes — nag banners verwijderen",
     "domain": "nytimes.com",
-    "description": "Verbergt subscription nag bars, update payment banners, en andere overlays",
+    "description": "Verbergt subscription nag bars, update payment banners, dock container en andere overlays",
     "js": "",
-    "css": "[data-testid='inline-message'], [class*='gateway-content'], [class*='expanded-dock'], [data-testid='paywall'], [class*='subscriber-nag'], [data-testid='subscription-nag'], [class*='pz-ad-box'], div[style*='bottom: 0'][style*='position: fixed'], [id*='gateway-content'], [class*='css-mcm29f'], [data-testid='dock-bar-wrapper'] { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; } body { overflow: auto !important; }"
+    "css": "#dock-container, [data-testid='inline-message'], [class*='gateway-content'], [class*='expanded-dock'], [data-testid='paywall'], [class*='subscriber-nag'], [data-testid='subscription-nag'], [class*='pz-ad-box'], div[style*='bottom: 0'][style*='position: fixed'], [id*='gateway-content'], [class*='css-mcm29f'], [data-testid='dock-bar-wrapper'] { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; } body { overflow: auto !important; }"
   },
   {
     "id": "telegraaf",

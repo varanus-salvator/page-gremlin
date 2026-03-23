@@ -284,15 +284,26 @@ function cleanUrl(url) {
   }
 }
 
-// Check if archive.ph has this URL — follows redirect to get the actual archive link
+// Check if archive.ph has this URL with actual content (not just a paywalled snapshot)
 async function checkArchive(pageUrl) {
   try {
     const checkUrl = 'https://archive.ph/newest/' + cleanUrl(pageUrl);
-    const res = await fetch(checkUrl, { method: 'HEAD', redirect: 'follow' });
-    // archive.ph redirects to /TIMESTAMP/URL if it exists
-    // If no archive exists, it redirects to the submit page or returns the search
+    const res = await fetch(checkUrl, { redirect: 'follow' });
     const finalUrl = res.url;
-    if (res.ok && finalUrl.match(/archive\.ph\/\d{14}\//)) {
+    // Must be an actual archived page (has timestamp in URL)
+    if (!res.ok || !finalUrl.match(/archive\.ph\/\d{14}\//)) {
+      return null;
+    }
+    // Fetch the content and check if there's enough article text
+    const html = await res.text();
+    // Strip all tags, then check text length
+    const text = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+                     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+                     .replace(/<[^>]+>/g, ' ')
+                     .replace(/\s+/g, ' ');
+    // A proper article should have at least 1500 chars of text content
+    // (a paywalled snapshot typically has < 500 of actual article text)
+    if (text.length > 3000) {
       return finalUrl;
     }
     return null;

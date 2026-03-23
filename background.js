@@ -151,43 +151,15 @@ window.tweaker = {
 };
 `;
 
+// Inject CSS as early as possible (during loading), JS after DOM is ready
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status !== 'complete' || !tab.url) return;
+  if (!tab.url) return;
 
-  chrome.storage.local.get({ tweaks: [] }, ({ tweaks }) => {
-    const matching = tweaks.filter(t => t.enabled && matchDomain(tab.url, t.domain));
-    if (!matching.length) return;
-
-    // Inject helpers first, then run user snippets
-    chrome.scripting.executeScript({
-      target: { tabId },
-      func: (helpers, css) => {
-        if (!window.tweaker) {
-          document.tweakerCSS = css;
-          const s = document.createElement('script');
-          s.textContent = helpers;
-          document.documentElement.appendChild(s);
-          s.remove();
-        }
-      },
-      args: [HELPERS, READER_CSS],
-      world: 'MAIN'
-    }).then(() => {
+  if (changeInfo.status === 'loading') {
+    // CSS first — blocks rendering of unwanted elements immediately
+    chrome.storage.local.get({ tweaks: [] }, ({ tweaks }) => {
+      const matching = tweaks.filter(t => t.enabled && matchDomain(tab.url, t.domain));
       for (const tweak of matching) {
-        if (tweak.js) {
-          chrome.scripting.executeScript({
-            target: { tabId },
-            func: code => {
-              const s = document.createElement('script');
-              s.textContent = code;
-              document.documentElement.appendChild(s);
-              s.remove();
-            },
-            args: [tweak.js],
-            world: 'MAIN'
-          }).catch(() => {});
-        }
-
         if (tweak.css) {
           chrome.scripting.insertCSS({
             target: { tabId },
@@ -195,8 +167,48 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
           }).catch(() => {});
         }
       }
-    }).catch(() => {});
-  });
+    });
+  }
+
+  if (changeInfo.status === 'complete') {
+    // JS after page load — helpers + user scripts
+    chrome.storage.local.get({ tweaks: [] }, ({ tweaks }) => {
+      const matching = tweaks.filter(t => t.enabled && matchDomain(tab.url, t.domain));
+      const hasJS = matching.some(t => t.js);
+      if (!hasJS) return;
+
+      chrome.scripting.executeScript({
+        target: { tabId },
+        func: (helpers, css) => {
+          if (!window.tweaker) {
+            document.tweakerCSS = css;
+            const s = document.createElement('script');
+            s.textContent = helpers;
+            document.documentElement.appendChild(s);
+            s.remove();
+          }
+        },
+        args: [HELPERS, READER_CSS],
+        world: 'MAIN'
+      }).then(() => {
+        for (const tweak of matching) {
+          if (tweak.js) {
+            chrome.scripting.executeScript({
+              target: { tabId },
+              func: code => {
+                const s = document.createElement('script');
+                s.textContent = code;
+                document.documentElement.appendChild(s);
+                s.remove();
+              },
+              args: [tweak.js],
+              world: 'MAIN'
+            }).catch(() => {});
+          }
+        }
+      }).catch(() => {});
+    });
+  }
 });
 
 function matchDomain(url, domain) {

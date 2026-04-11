@@ -33,11 +33,11 @@
   },
   {
     "id": "nytimes-nags",
-    "name": "NYTimes — nag banners verwijderen",
+    "name": "NYTimes — artikelen in reader view",
     "domain": "nytimes.com",
-    "description": "Verbergt subscription nag bars, update payment banners, dock container en andere overlays",
-    "js": "",
-    "css": "#dock-container, [data-testid='inline-message'], [class*='gateway-content'], [class*='expanded-dock'], [data-testid='paywall'], [class*='subscriber-nag'], [data-testid='subscription-nag'], [class*='pz-ad-box'], div[style*='bottom: 0'][style*='position: fixed'], [id*='gateway-content'], [class*='css-mcm29f'], [data-testid='dock-bar-wrapper'] { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; } body { overflow: auto !important; }"
+    "description": "Op artikelpagina's: render schone reader view vanuit JSON-LD (omzeilt paywall). Op andere pagina's: verberg alleen nag banners.",
+    "js": "if (location.pathname.match(/\\/\\d{4}\\/\\d{2}\\/\\d{2}\\//)) { gremlin.reader('article'); }",
+    "css": "#dock-container, [data-testid='inline-message'], [data-testid='paywall'], [data-testid='subscription-nag'], [data-testid='dock-bar-wrapper'], [class*='subscriber-nag'], [class*='expanded-dock'], [class*='pz-ad-box'] { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; } body { overflow: auto !important; }"
   },
   {
     "id": "telegraaf",

@@ -54,5 +54,13 @@
     "description": "Gremlin badge toont link naar archive.ph als het artikel daar beschikbaar is.",
     "js": "",
     "css": ""
+  },
+  {
+    "id": "newyorker-reader",
+    "name": "New Yorker — reader view",
+    "domain": "newyorker.com",
+    "description": "Rendert een schone reader view vanuit JSON-LD (volledige articleBody zit in de HTML voor SEO, omzeilt paywall)",
+    "js": "if (location.pathname.match(/\\/(magazine|news|culture|books|humor|cartoons|podcast|video)\\//)) { gremlin.reader('article'); }",
+    "css": ""
   }
 ]

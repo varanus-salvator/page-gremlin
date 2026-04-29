@@ -186,7 +186,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   if (changeInfo.status === 'loading') {
     chrome.storage.local.get({ tweaks: [] }, ({ tweaks }) => {
-      const matching = tweaks.filter(t => t.enabled && matchDomain(tab.url, t.domain));
+      const matching = tweaks.filter(t => t.enabled && matchDomain(tab.url, t));
       for (const tweak of matching) {
         if (tweak.css) {
           chrome.scripting.insertCSS({ target: { tabId }, css: tweak.css }).catch(() => {});
@@ -200,7 +200,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   if (changeInfo.status === 'complete') {
     chrome.storage.local.get({ tweaks: [] }, ({ tweaks }) => {
-      const matching = tweaks.filter(t => t.enabled && matchDomain(tab.url, t.domain));
+      const matching = tweaks.filter(t => t.enabled && matchDomain(tab.url, t));
       if (!matching.length) return;
 
       const names = matching.map(t => t.name || t.domain).join(', ');
@@ -279,10 +279,57 @@ function cleanUrl(url) {
   }
 }
 
-function matchDomain(url, domain) {
+// Auto-update: refetch snippet library and bump installed snippets when version is higher
+const DEFAULT_REPO = 'varanus-salvator/page-gremlin';
+const UPDATE_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24h
+
+async function autoUpdateSnippets() {
+  const { tweaks = [], repoUrl = DEFAULT_REPO, autoUpdate = true, lastUpdateCheck = 0 } =
+    await chrome.storage.local.get(['tweaks', 'repoUrl', 'autoUpdate', 'lastUpdateCheck']);
+  if (!autoUpdate) return;
+  if (Date.now() - lastUpdateCheck < UPDATE_INTERVAL_MS) return;
+  try {
+    const url = `https://raw.githubusercontent.com/${repoUrl}/main/index.json`;
+    const res = await fetch(url, { cache: 'no-cache' });
+    if (!res.ok) throw new Error('fetch failed: ' + res.status);
+    const library = await res.json();
+    let updated = 0;
+    for (const t of tweaks) {
+      if (!t.id) continue;
+      const lib = library.find(s => s.id === t.id);
+      if (!lib) continue;
+      const libV = lib.version || 0;
+      const myV = t.version || 0;
+      if (libV > myV) {
+        t.name = lib.name;
+        t.js = lib.js || '';
+        t.css = lib.css || '';
+        t.version = libV;
+        if (Array.isArray(lib.domains)) { t.domains = lib.domains; delete t.domain; }
+        else if (lib.domain) { t.domain = lib.domain; delete t.domains; }
+        updated++;
+      }
+    }
+    await chrome.storage.local.set({ tweaks, lastUpdateCheck: Date.now() });
+    if (updated) console.log('[Page Gremlin] Auto-updated', updated, 'snippet(s)');
+  } catch (e) {
+    console.log('[Page Gremlin] Auto-update failed:', e.message);
+  }
+}
+
+chrome.runtime.onStartup?.addListener(autoUpdateSnippets);
+chrome.runtime.onInstalled?.addListener(autoUpdateSnippets);
+// Also check on every browser action (popup open) — cheap because rate-limited
+autoUpdateSnippets();
+
+function matchDomain(url, domainOrTweak) {
   try {
     const hostname = new URL(url).hostname;
-    return hostname === domain || hostname.endsWith('.' + domain);
+    const tweak = typeof domainOrTweak === 'object' ? domainOrTweak : null;
+    const domains = tweak
+      ? (tweak.domains || (tweak.domain ? [tweak.domain] : []))
+      : [domainOrTweak];
+    return domains.some(d => hostname === d || hostname.endsWith('.' + d));
   } catch {
     return false;
   }
